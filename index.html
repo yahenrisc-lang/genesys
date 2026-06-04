@@ -1,544 +1,83 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Keops — Backoffice démo</title>
-  <style>
-    :root {
-      --blue: #173b73;
-      --blue-2: #2356a3;
-      --red: #d71920;
-      --bg: #f3f6fb;
-      --card: #ffffff;
-      --text: #172033;
-      --muted: #6b7280;
-      --border: #dbe3ef;
-      --green: #0f8f5f;
-      --orange: #d97706;
-      --shadow: 0 18px 45px rgba(23, 59, 115, 0.12);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(circle at top left, rgba(35, 86, 163, .16), transparent 35%), var(--bg);
-      color: var(--text);
-    }
-
-    header {
-      background: linear-gradient(135deg, var(--blue), var(--blue-2));
-      color: #fff;
-      padding: 22px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      box-shadow: 0 8px 30px rgba(17, 24, 39, .18);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .mark {
-      width: 58px;
-      height: 58px;
-      border-radius: 16px;
-      background: #fff;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      padding: 7px;
-    }
-
-    .mark img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: 24px;
-      letter-spacing: .02em;
-    }
-
-    .brand p {
-      margin: 4px 0 0;
-      color: rgba(255,255,255,.78);
-      font-size: 13px;
-    }
-
-    .header-meta {
-      text-align: right;
-      font-size: 13px;
-      color: rgba(255,255,255,.82);
-    }
-
-    main {
-      max-width: 1180px;
-      margin: 30px auto;
-      padding: 0 22px 42px;
-    }
-
-    .alert {
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      color: #9a3412;
-      padding: 14px 16px;
-      border-radius: 16px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 22px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .card-header {
-      padding: 20px 22px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .card-header h2 {
-      margin: 0;
-      font-size: 18px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      background: #eaf6ef;
-      color: var(--green);
-      white-space: nowrap;
-    }
-
-    .badge.warning {
-      background: #fff7ed;
-      color: var(--orange);
-    }
-
-    .content { padding: 22px; }
-
-    .identity {
-      display: grid;
-      grid-template-columns: 86px 1fr;
-      gap: 18px;
-      align-items: center;
-      margin-bottom: 22px;
-    }
-
-    .avatar {
-      width: 86px;
-      height: 86px;
-      border-radius: 24px;
-      background: linear-gradient(135deg, var(--blue), var(--red));
-      color: #fff;
-      display: grid;
-      place-items: center;
-      font-size: 26px;
-      font-weight: 900;
-    }
-
-    .identity h3 {
-      margin: 0 0 6px;
-      font-size: 26px;
-    }
-
-    .identity p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .field {
-      background: #f8fafc;
-      border: 1px solid #e5eaf3;
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .field span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 7px;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      font-weight: 700;
-    }
-
-    .field strong {
-      font-size: 15px;
-    }
-
-    .terminal {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 14px;
-      align-items: center;
-      background: linear-gradient(135deg, #f8fbff, #eef5ff);
-      border: 1px solid #d9e8ff;
-      border-radius: 18px;
-      padding: 16px;
-      margin-top: 18px;
-    }
-
-    .terminal h3 { margin: 0 0 6px; }
-    .terminal p { margin: 0; color: var(--muted); font-size: 14px; }
-
-    .terminal-visual {
-      width: 76px;
-      height: 96px;
-      border-radius: 16px;
-      background: #111827;
-      position: relative;
-      box-shadow: inset 0 0 0 5px #243041, 0 12px 25px rgba(17, 24, 39, .18);
-    }
-
-    .terminal-visual::before {
-      content: "";
-      position: absolute;
-      left: 13px;
-      right: 13px;
-      top: 14px;
-      height: 28px;
-      border-radius: 7px;
-      background: #60a5fa;
-    }
-
-    .terminal-visual::after {
-      content: "X5";
-      position: absolute;
-      bottom: 14px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      color: #fff;
-      font-weight: 900;
-      letter-spacing: .08em;
-    }
-
-    label {
-      display: block;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 152px;
-      resize: vertical;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px;
-      font: inherit;
-      outline: none;
-      background: #fbfdff;
-    }
-
-    textarea:focus {
-      border-color: var(--blue-2);
-      box-shadow: 0 0 0 4px rgba(35, 86, 163, .1);
-    }
-
-    .terminal-label {
-      display: block;
-      margin: 12px 0 8px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      color: var(--muted);
-    }
-
-    .terminal-select {
-      width: min(100%, 260px);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 12px;
-      background: #fff;
-      font: inherit;
-      font-weight: 700;
-      color: var(--text);
-      outline: none;
-    }
-
-    .terminal-select:focus {
-      border-color: var(--blue-2);
-      box-shadow: 0 0 0 4px rgba(35, 86, 163, .1);
-    }
-
-    .actions {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    button {
-      border: 0;
-      border-radius: 15px;
-      padding: 13px 16px;
-      font-weight: 800;
-      cursor: pointer;
-      font-size: 14px;
-      transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 18px rgba(17, 24, 39, .12);
-    }
-
-    .primary { background: var(--blue-2); color: #fff; }
-    .secondary { background: #eef4ff; color: var(--blue); }
-    .danger { background: #fff1f2; color: #be123c; }
-    .ghost { background: #f3f4f6; color: #374151; }
-
-    .split {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .history {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .event {
-      border-left: 4px solid var(--blue-2);
-      background: #f8fafc;
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-size: 14px;
-    }
-
-    .event strong { display: block; margin-bottom: 4px; }
-    .event span { color: var(--muted); font-size: 12px; }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 24px;
-      transform: translateX(-50%) translateY(120px);
-      background: #111827;
-      color: #fff;
-      padding: 13px 18px;
-      border-radius: 999px;
-      opacity: 0;
-      transition: .25s ease;
-      box-shadow: 0 15px 35px rgba(0,0,0,.22);
-      font-size: 14px;
-      z-index: 40;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    @media (max-width: 860px) {
-      header { align-items: flex-start; flex-direction: column; }
-      .header-meta { text-align: left; }
-      .layout { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: 1fr; }
-      .split { grid-template-columns: 1fr; }
-      .alert { flex-direction: column; }
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Darty - Profil client</title>
+<style>
+:root{--red:#e30613;--blue:#006eff;--text:#3d3d3f;--muted:#767676;--border:#e7e7e7;--bg:#f4f4f4;--green:#21a65b;--orange:#ff8a00}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+header{height:88px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 34px}.brand{display:flex;align-items:center;gap:18px}.darty-logo{width:66px;height:66px;object-fit:contain}.header-title{font-size:20px;font-weight:800;color:#111}.wrap{max-width:1260px;margin:0 auto;padding:28px 28px 50px}main{width:100%}.title{display:flex;align-items:center;justify-content:space-between;margin:0 0 20px}h1{font-size:30px;margin:0}.badge{background:#fff;border:1px solid #d6e7ff;color:#005bbb;border-radius:999px;padding:10px 18px;font-weight:800;display:flex;align-items:center;gap:12px}.max-logo{height:38px;width:auto;object-fit:contain}.profile{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;margin:18px 0 28px}.panel{background:#fff;border:1px solid var(--border);border-radius:6px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.04)}.panel h2{font-size:22px;margin:0 0 18px}.identity{display:flex;gap:18px;align-items:center}.avatar{width:74px;height:74px;background:#f1f6ff;border-radius:50%;display:grid;place-items:center;font-size:34px;color:var(--blue);font-weight:800}.name{font-size:27px;font-weight:900}.sub{color:var(--muted);margin-top:6px}.grid{display:grid;grid-template-columns:170px 1fr;row-gap:12px}.grid b{color:#555}.section-heading{font-size:30px;font-weight:900;margin:4px 0 22px}.order-title{font-size:14px;color:#555;margin-bottom:6px}.order-id{font-size:25px;font-weight:900;margin-bottom:14px}.order-id span{font-size:16px;font-weight:400;margin-left:8px}.order-card{background:#fff;border:1px solid var(--border);border-radius:6px;margin-bottom:26px;padding:22px}.order-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}.status{display:flex;align-items:center;font-weight:800}.dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;margin-right:10px;color:#fff}.dot.wait{background:#ff8a00}.dot.ok{background:#21a65b}.cta{background:var(--blue);color:#fff;border:0;border-radius:30px;padding:14px 28px;font-weight:800;cursor:pointer}.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0 48px}.mini{border:1px solid #eee;border-radius:4px;padding:14px;background:#fafafa}.mini .k{font-size:12px;color:#888;text-transform:uppercase;font-weight:800;margin-bottom:6px}.mini .v{font-size:17px;font-weight:900}.products{margin-top:20px}.product{display:flex;align-items:center;gap:20px;margin:20px 0}.thumb{width:74px;height:55px;object-fit:cover;background:#ddd;border:1px solid #ddd}.label{font-size:12px;color:#999;font-weight:900}.pname{font-size:18px;font-weight:900;margin-top:4px}.equipment-card{display:flex;gap:28px;align-items:flex-start}.equipment-img{width:145px;max-width:35%;border:1px solid #eee;border-radius:4px;background:#fff;object-fit:contain}.equipment-info{flex:1;min-width:0}.equipment-info h3{margin:0 0 10px;font-size:20px}.covered{display:inline-flex;align-items:center;gap:8px;background:#e9f8ef;color:#168748;border-radius:999px;padding:8px 14px;font-weight:800;margin-top:12px}.intervention{display:none;margin-top:22px;border-top:1px solid var(--border);padding-top:20px}.intervention.open{display:block}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.form-field label{display:block;font-size:13px;font-weight:800;color:#555;margin-bottom:8px}select,textarea{width:100%;border:1px solid #d7d7d7;border-radius:5px;font:inherit;padding:12px;background:#fff}textarea{min-height:100px;resize:vertical}.actions{display:flex;gap:12px;align-items:center}.secondary{background:#fff;color:var(--blue);border:2px solid var(--blue)}.request-line{margin-top:16px;padding:16px;border:1px solid #cdebd8;background:#f3fff7;border-radius:6px}.request-line strong{display:block;color:#168748;margin-bottom:6px}@media(max-width:850px){header{padding:0 18px}.wrap{padding:20px 16px}.profile{grid-template-columns:1fr}.meta{grid-template-columns:1fr}.equipment-card{flex-direction:column}.equipment-img{max-width:220px;width:100%}.form-grid{grid-template-columns:1fr}.title{align-items:flex-start;gap:12px;flex-direction:column}}
+</style>
 </head>
 <body>
-  
+<header>
+  <div class="brand"><img class="darty-logo" src="Darty.svg.png" alt="Darty"><div class="header-title">Espace client</div></div>
+</header>
+<div class="wrap">
+<main>
+  <div class="title">
+    <div><h1>Profil client</h1></div>
+    <div class="badge"><span>Adhérent Darty Max</span><img class="max-logo" src="thumbnail_800x480px-124802.jpg" alt="Darty Max"></div>
+  </div>
 
-  <header>
-    <div class="brand">
-      <div class="mark logo-mark"><img src="https://upload.wikimedia.org/wikipedia/commons/8/87/LOGO_FDJ.png" alt="Logo FDJ" /></div>
-      <div>
-        <h1>Keops</h1>
-        <p>Prototype Keops — environnement de démonstration sans connexion réelle</p>
+  <section class="profile">
+    <div class="panel">
+      <div class="identity"><div class="avatar">YH</div><div><div class="name">Yves-André Henri</div><div class="sub">Client particulier · Adhésion Darty Max active</div></div></div>
+    </div>
+    <div class="panel">
+      <h2>Coordonnées</h2>
+      <div class="grid"><b>Téléphone</b><span>+33 6 70 20 25 51</span><b>Email</b><span>ya.henri.sc@gmail.com</span><b>Adresse</b><span>65 Rue Camille Desmoulins<br>92130 Issy-les-Moulineaux</span></div>
+    </div>
+  </section>
+
+  <div class="section-heading">Mes commandes</div>
+  <div class="order-title">Commande en cours</div><div class="order-id">N°9070299733011 <span>du 31/05/2025</span></div>
+  <article class="order-card current">
+    <div class="order-head"><div class="status"><span class="dot wait">⌛</span><div>En cours de livraison<span class="small"> · Livraison à domicile Chronopost</span></div></div><button class="cta">Détails de ma commande</button></div>
+    <div class="meta"><div class="mini"><div class="k">Date de commande</div><div class="v">31/05/2025</div></div><div class="mini"><div class="k">Livraison estimée</div><div class="v">10/06/2025</div></div><div class="mini"><div class="k">Type de livraison</div><div class="v">Domicile Chronopost</div></div></div>
+    <div class="products"><div class="product"><img class="thumb dark" src="" alt=""><div><div class="label">AMPLI HOME CINEMA</div><div class="pname">ONKYO TXSR444 BLACK</div></div></div></div>
+  </article>
+
+  <div class="order-title">Historique de commandes</div><div class="order-id">N°9070697226115 <span>du 14/06/2025</span></div>
+  <article class="order-card">
+    <div class="order-head"><div class="status"><span class="dot ok">✓</span><div>Livrée<span class="small"> · Commande finalisée</span></div></div><button class="cta">Détails de ma commande</button></div>
+    <div class="products"><div class="product"><div class="thumb"></div><div><div class="label">ARTICLE</div><div class="pname">DARTY PRESTA PROMO ABO</div></div></div><div class="product"><div class="thumb"></div><div><div class="label">ARTICLE</div><div class="pname">DARTY MAX Essentiel Abo M</div></div></div></div>
+  </article>
+
+  <div class="section-heading">Équipement existant</div>
+  <article class="order-card equipment">
+    <div class="equipment-card">
+      <img class="equipment-img" src="lave_linge.webp" alt="Lave-linge hublot Proline FP6120A10WH">
+      <div class="equipment-info">
+        <div class="label">LAVE-LINGE HUBLOT</div>
+        <h3>Proline FP6120A10WH</h3>
+        <div class="meta tight"><div class="mini"><div class="k">Date d’achat</div><div class="v">Décembre 2024</div></div><div class="mini"><div class="k">Couverture</div><div class="v">Garantie Darty Max</div></div></div>
+        <div class="covered">✓ Couvert par la garantie Darty Max</div>
       </div>
     </div>
-    <div class="header-meta">
-      <strong>Session opérateur :</strong> demo.support<br />
-      Dernière synchronisation : <span id="syncDate"></span>
+    <button class="btn cta" style="margin-top:22px" onclick="document.querySelector('#intervention').classList.toggle('open')">Faire une demande d’intervention</button>
+    <div class="intervention" id="intervention">
+      <div class="form-grid">
+        <div class="form-field"><label for="probleme">Problème rencontré</label><select id="probleme" name="probleme"><option>Ne démarre pas</option><option>Problème d'essorage</option><option>Fuite d'eau</option><option>Bruit anormal</option><option>Erreur affichée</option><option>Autre problème</option></select></div>
+        <div class="form-field"><label for="date">Date souhaitée</label><select id="date" name="date"><option>10 juin 2025</option><option>11 juin 2025</option><option>12 juin 2025</option><option>13 juin 2025</option><option>16 juin 2025</option></select></div>
+        <div class="form-field" style="grid-column:1/-1"><label for="commentaire">Commentaires</label><textarea id="commentaire" name="commentaire" placeholder="Décrivez le problème rencontré..."></textarea></div>
+      </div>
+      <div class="actions" style="margin-top:14px"><button class="btn cta" onclick="validerIntervention()">Valider la demande</button><button class="btn secondary" onclick="document.querySelector('#intervention').classList.remove('open')">Annuler</button></div>
+      <div id="intervention-result"></div>
     </div>
-  </header>
-
-  <main>
-    <section class="layout">
-      <article class="card">
-        <div class="card-header">
-          <h2>Fiche buraliste</h2>
-          <span class="badge">● Client actif</span>
-        </div>
-        <div class="content">
-          <div class="identity">
-            <div class="avatar">YH</div>
-            <div>
-              <h3>Yves-André Henri</h3>
-              <p>Bureau de tabac — Caen, Calvados<br />Réseau détaillants / point de vente jeux</p>
-            </div>
-          </div>
-
-          <div class="grid">
-            <div class="field">
-              <span>Numéro client</span>
-              <strong>1445891</strong>
-            </div>
-            <div class="field">
-              <span>Type de commerce</span>
-              <strong>Bureau tabac</strong>
-            </div>
-            <div class="field">
-              <span>Ville</span>
-              <strong>Caen</strong>
-            </div>
-            <div class="field">
-              <span>Statut dossier</span>
-              <strong>Suivi standard</strong>
-            </div>
-          </div>
-
-          <div class="terminal">
-            <div>
-              <h3>Terminal FDJ Connect X5</h3>
-              <p>Équipement déclaré : terminal principal du point de vente.</p>
-              <label for="etatTerminal" class="terminal-label">État du terminal</label>
-              <select id="etatTerminal" class="terminal-select" onchange="updateTerminalState()">
-                <option>Opérationnel</option>
-                <option selected>À remplacer</option>
-                <option>Intervention requise</option>
-                <option>En panne</option>
-                <option>En attente diagnostic</option>
-              </select>
-            </div>
-            <div class="terminal-visual" aria-hidden="true"></div>
-          </div>
-        </div>
-      </article>
-
-      <aside class="card">
-        <div class="card-header">
-          <h2>Script conseiller</h2>
-          <span class="badge warning">Brouillon local</span>
-        </div>
-        <div class="content">
-          <label for="commentaire">Commentaire libre</label>
-          <textarea id="commentaire" placeholder="Saisir ici le compte rendu d'appel, le diagnostic ou la demande du buraliste..."></textarea>
-
-          <div class="actions">
-            <button class="primary" onclick="createRequest('Demande de nouveau terminal')">Demander un nouveau terminal</button>
-            <button class="secondary" onclick="createRequest('Intervention sur terminal existant')">Demander une intervention sur le terminal existant</button>
-            <button class="danger" onclick="clearComment()">Effacer le commentaire</button>
-          </div>
-
-          <div class="history" id="history">
-            <div class="event">
-              <strong>Ouverture de la fiche</strong>
-              <span>Action locale — aucune donnée envoyée</span>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </section>
-  </main>
-
-  <div class="toast" id="toast">Action simulée</div>
-
-  <script>
-    const syncDate = document.getElementById('syncDate');
-    const historyBox = document.getElementById('history');
-    const toast = document.getElementById('toast');
-    const comment = document.getElementById('commentaire');
-
-    syncDate.textContent = new Date().toLocaleString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      window.setTimeout(() => toast.classList.remove('show'), 2200);
-    }
-
-    function createRequest(type) {
-      const value = comment.value.trim();
-      const now = new Date().toLocaleString('fr-FR');
-      const event = document.createElement('div');
-      event.className = 'event';
-      event.innerHTML = `
-        <strong>${escapeHtml(type)}</strong>
-        <span>${now} — client 1445891 — ${value ? escapeHtml(value) : 'Aucun commentaire renseigné'}</span>
-      `;
-      historyBox.prepend(event);
-      showToast(type + ' créée en simulation');
-    }
-
-    function updateTerminalState() {
-      const value = document.getElementById('etatTerminal').value;
-      const now = new Date().toLocaleString('fr-FR');
-      const event = document.createElement('div');
-      event.className = 'event';
-      event.innerHTML = `
-        <strong>État terminal modifié</strong>
-        <span>${now} — nouvel état : ${escapeHtml(value)}</span>
-      `;
-      historyBox.prepend(event);
-      showToast('État du terminal mis à jour');
-    }
-
-    function clearComment() {
-      comment.value = '';
-      showToast('Commentaire effacé');
-    }
-
-    function escapeHtml(text) {
-      return text
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-    }
-  </script>
+  </article>
+</main>
+</div>
+<script>
+function validerIntervention(){
+  const probleme=document.getElementById('probleme').value;
+  const date=document.getElementById('date').value;
+  const commentaire=document.getElementById('commentaire').value.trim() || 'Aucun commentaire ajouté.';
+  const result=document.getElementById('intervention-result');
+  result.innerHTML='<div class="request-line"><strong>Intervention demandée</strong><div><b>Produit :</b> Lave-linge hublot Proline FP6120A10WH</div><div><b>Problème :</b> '+escapeHtml(probleme)+'</div><div><b>Date souhaitée :</b> '+escapeHtml(date)+'</div><div><b>Commentaire :</b> '+escapeHtml(commentaire)+'</div></div>';
+}
+function escapeHtml(text){return text.replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c];});}
+</script>
 </body>
 </html>
