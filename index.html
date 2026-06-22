@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paiement assurance</title>
+  <style>
+    :root {
+      --primary: #0066b3;
+      --primary-dark: #004f8c;
+      --accent: #e8f3fb;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --success: #0f766e;
+      --danger: #b91c1c;
+      --bg: #f3f6fa;
+      --card: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #eef5fb 0%, #f9fafb 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 980px;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 24px;
+    }
+
+    .panel, .card {
+      background: var(--card);
+      border: 1px solid rgba(209, 213, 219, .8);
+      border-radius: 22px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, .08);
+      overflow: hidden;
+    }
+
+    .panel {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .logo {
+      max-width: 230px;
+      height: auto;
+      display: block;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      background: var(--accent);
+      color: var(--primary-dark);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    h1 {
+      margin: 22px 0 10px;
+      font-size: 32px;
+      line-height: 1.1;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .summary {
+      margin-top: 28px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0;
+      color: var(--muted);
+    }
+
+    .row strong { color: var(--text); text-align: right; }
+
+    .amount {
+      margin-top: 14px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .amount span {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .amount strong {
+      font-size: 34px;
+      color: var(--primary-dark);
+    }
+
+    .card header {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card header h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .card header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    form { padding: 28px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field { margin-bottom: 16px; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      height: 46px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0 13px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      background: #fff;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(0, 102, 179, .12);
+    }
+
+    .secure {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      color: var(--success);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.4;
+      margin: 6px 0 18px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 15px 18px;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+
+    button:hover { background: var(--primary-dark); }
+    button:active { transform: translateY(1px); }
+
+    .note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      margin: 16px 0 0;
+    }
+
+    .error {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    @media (max-width: 820px) {
+      body { align-items: flex-start; }
+      .page { grid-template-columns: 1fr; }
+      h1 { font-size: 28px; }
+    }
+
+    @media (max-width: 520px) {
+      body { padding: 14px; }
+      .panel, form, .card header { padding: 22px; }
+      .grid { grid-template-columns: 1fr; gap: 0; }
+      .amount strong { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="panel" aria-label="Résumé du paiement">
+      <div>
+        <img class="logo" src="direct-assurance-logo.png" alt="Direct Assurance" />
+        <div class="badge">🔒 Paiement sécurisé</div>
+        <h1>Règlement de votre assurance</h1>
+        <p class="lead">
+          Veuillez vérifier les informations ci-dessous avant de procéder au paiement de votre échéance.
+        </p>
+
+        <div class="summary">
+          <div class="row">
+            <span>Nom</span>
+            <strong id="displayNom">-</strong>
+          </div>
+          <div class="row">
+            <span>Prénom</span>
+            <strong id="displayPrenom">-</strong>
+          </div>
+          <div class="amount">
+            <span>Montant à régler</span>
+            <strong id="displayMontant">0,00 €</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Formulaire de paiement">
+      <header>
+        <h2>Informations de paiement</h2>
+        <p>Saisissez les informations de votre carte bancaire.</p>
+      </header>
+
+      <form id="paymentForm" autocomplete="on">
+        <div class="field">
+          <label for="cardName">Titulaire de la carte</label>
+          <input id="cardName" name="cardName" type="text" placeholder="Ex : Marie Dupont" required />
+        </div>
+
+        <div class="field">
+          <label for="cardNumber">Numéro de carte</label>
+          <input id="cardNumber" name="cardNumber" type="text" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456" required />
+          <div class="error" id="cardError">Veuillez saisir un numéro de carte valide.</div>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="expiry">Date d'expiration</label>
+            <input id="expiry" name="expiry" type="text" inputmode="numeric" maxlength="5" placeholder="MM/AA" required />
+          </div>
+          <div class="field">
+            <label for="cvv">Cryptogramme</label>
+            <input id="cvv" name="cvv" type="password" inputmode="numeric" maxlength="4" placeholder="123" required />
+          </div>
+        </div>
+
+        <div class="secure">
+          <span>🔐</span>
+          <span>Cette page est un modèle HTML local. Ne collectez jamais de données bancaires réelles sans prestataire de paiement certifié.</span>
+        </div>
+
+        <button type="submit" id="payButton">Payer maintenant</button>
+        <p class="note">En validant, vous confirmez vouloir régler le montant indiqué.</p>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    function cleanText(value, fallback = '-') {
+      const text = (value || '').trim();
+      return text ? text.replace(/[<>]/g, '') : fallback;
+    }
+
+    function formatAmount(value) {
+      const normalized = String(value || '0').replace(',', '.').replace(/[^0-9.]/g, '');
+      const amount = Number.parseFloat(normalized);
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'EUR'
+      }).format(Number.isFinite(amount) ? amount : 0);
+    }
+
+    const nom = cleanText(params.get('nom'));
+    const prenom = cleanText(params.get('prenom'));
+    const montant = formatAmount(params.get('montant'));
+
+    document.getElementById('displayNom').textContent = nom;
+    document.getElementById('displayPrenom').textContent = prenom;
+    document.getElementById('displayMontant').textContent = montant;
+    document.getElementById('cardName').value = `${prenom !== '-' ? prenom : ''} ${nom !== '-' ? nom : ''}`.trim();
+    document.getElementById('payButton').textContent = `Payer ${montant}`;
+
+    const cardNumber = document.getElementById('cardNumber');
+    const expiry = document.getElementById('expiry');
+    const cvv = document.getElementById('cvv');
+    const cardError = document.getElementById('cardError');
+
+    cardNumber.addEventListener('input', () => {
+      cardNumber.value = cardNumber.value
+        .replace(/\D/g, '')
+        .replace(/(.{4})/g, '$1 ')
+        .trim()
+        .slice(0, 19);
+      cardError.style.display = 'none';
+    });
+
+    expiry.addEventListener('input', () => {
+      const digits = expiry.value.replace(/\D/g, '').slice(0, 4);
+      expiry.value = digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
+    });
+
+    cvv.addEventListener('input', () => {
+      cvv.value = cvv.value.replace(/\D/g, '').slice(0, 4);
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const digits = cardNumber.value.replace(/\D/g, '');
+
+      if (digits.length < 13 || digits.length > 19) {
+        cardError.style.display = 'block';
+        cardNumber.focus();
+        return;
+      }
+
+      alert('Paiement prêt à être envoyé vers un prestataire de paiement sécurisé.');
+    });
+  </script>
+</body>
+</html>
