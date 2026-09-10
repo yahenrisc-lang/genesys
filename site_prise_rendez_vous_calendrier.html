@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RendezVous+ | Calendrier</title>
+  <style>
+    :root {
+      --primary: #6d3cf5;
+      --accent: #ef3f6b;
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #202235;
+      --muted: #777b8f;
+      --border: #e6e8f0;
+      --unavailable: #e53935;
+      --unavailable-bg: #fdecec;
+      --available-bg: #eef9f4;
+      --available: #18865b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), #8c63ff);
+      color: white;
+      padding: 22px 8%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 8px 30px rgba(78, 41, 175, 0.18);
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .brand span {
+      color: #ffd5df;
+    }
+
+    .hero {
+      padding: 38px 8% 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 36px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .calendar-card {
+      margin: 20px 8% 50px;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 12px 40px rgba(34, 37, 52, 0.08);
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+
+    .calendar-header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .calendar-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .calendar-nav button {
+      border: 1px solid var(--border);
+      background: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.available {
+      background: var(--available);
+    }
+
+    .dot.unavailable {
+      background: var(--unavailable);
+    }
+
+    .weekdays,
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+
+    .weekdays div {
+      text-align: center;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+      padding: 8px 0;
+    }
+
+    .day {
+      min-height: 180px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: white;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .day.empty,
+    .day.disabled {
+      background: #fafafe;
+      color: #c2c5d0;
+    }
+
+    .day-number {
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .section-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+      letter-spacing: .04em;
+      margin-top: 4px;
+    }
+
+    .slots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .slot {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 7px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    .slot.available {
+      color: var(--available);
+      background: var(--available-bg);
+      border: 1px solid #cdebdc;
+    }
+
+    .slot.unavailable {
+      color: var(--unavailable);
+      background: var(--unavailable-bg);
+      border: 1px solid #f6c4c2;
+      text-decoration: line-through;
+    }
+
+    .day.today {
+      border: 2px solid var(--accent);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding-bottom: 25px;
+    }
+
+    @media (max-width: 1100px) {
+      .weekdays,
+      .days {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .weekdays {
+        display: none;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .weekdays,
+      .days {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 28px;
+      }
+
+      .calendar-card {
+        margin-left: 4%;
+        margin-right: 4%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Rendez<span>Vous+</span></div>
+</header>
+
+<section class="hero">
+  <h1>Calendrier des rendez-vous</h1>
+  <p>Consultez les créneaux disponibles et indisponibles pour chaque journée.</p>
+</section>
+
+<section class="calendar-card">
+  <div class="calendar-header">
+    <h2 id="monthTitle">Calendrier</h2>
+    <div class="calendar-nav">
+      <button id="prevMonth" aria-label="Mois précédent">‹</button>
+      <button id="nextMonth" aria-label="Mois suivant">›</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <span class="dot available"></span>
+      Disponible
+    </div>
+    <div class="legend-item">
+      <span class="dot unavailable"></span>
+      Indisponible
+    </div>
+  </div>
+
+  <div class="weekdays">
+    <div>Lun</div>
+    <div>Mar</div>
+    <div>Mer</div>
+    <div>Jeu</div>
+    <div>Ven</div>
+    <div>Sam</div>
+    <div>Dim</div>
+  </div>
+
+  <div class="days" id="calendarDays"></div>
+</section>
+
+<footer>
+  Site fictif de démonstration — RendezVous+ © 2026
+</footer>
+
+<script>
+  const monthTitle = document.getElementById("monthTitle");
+  const calendarDays = document.getElementById("calendarDays");
+
+  const monthNames = [
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+  ];
+
+  let currentDate = new Date();
+
+  const morningSlots = ["09:00", "10:00", "11:30"];
+  const afternoonSlots = ["14:00", "15:30", "17:00"];
+
+  function isUnavailable(day, time) {
+    const code = day * 13 + parseInt(time.replace(":", ""));
+    return code % 4 === 0 || code % 7 === 0;
+  }
+
+  function createSlot(day, time) {
+    const slot = document.createElement("span");
+    const unavailable = isUnavailable(day, time);
+
+    slot.className = "slot " + (unavailable ? "unavailable" : "available");
+    slot.textContent = time;
+
+    return slot;
+  }
+
+  function addSlotsSection(dayElement, day, title, slots) {
+    const titleEl = document.createElement("div");
+    titleEl.className = "section-title";
+    titleEl.textContent = title;
+
+    const slotsEl = document.createElement("div");
+    slotsEl.className = "slots";
+
+    slots.forEach(time => {
+      slotsEl.appendChild(createSlot(day, time));
+    });
+
+    dayElement.appendChild(titleEl);
+    dayElement.appendChild(slotsEl);
+  }
+
+  function renderCalendar() {
+    calendarDays.innerHTML = "";
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    monthTitle.textContent = `${monthNames[month]} ${year}`;
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+
+    let startDay = firstDay.getDay();
+    startDay = startDay === 0 ? 6 : startDay - 1;
+
+    for (let i = 0; i < startDay; i++) {
+      const empty = document.createElement("div");
+      empty.className = "day empty";
+      calendarDays.appendChild(empty);
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      const date = new Date(year, month, day);
+      date.setHours(0, 0, 0, 0);
+
+      const dayElement = document.createElement("div");
+      dayElement.className = "day";
+
+      const dayNumber = document.createElement("div");
+      dayNumber.className = "day-number";
+      dayNumber.textContent = day;
+      dayElement.appendChild(dayNumber);
+
+      const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+      if (date.getTime() === today.getTime()) {
+        dayElement.classList.add("today");
+      }
+
+      if (isWeekend) {
+        dayElement.classList.add("disabled");
+
+        const closed = document.createElement("div");
+        closed.style.fontSize = "12px";
+        closed.style.color = "#a0a4b4";
+        closed.style.marginTop = "10px";
+        closed.textContent = "Fermé";
+        dayElement.appendChild(closed);
+      } else {
+        addSlotsSection(dayElement, day, "Matin", morningSlots);
+        addSlotsSection(dayElement, day, "Après-midi", afternoonSlots);
+      }
+
+      calendarDays.appendChild(dayElement);
+    }
+  }
+
+  document.getElementById("prevMonth").addEventListener("click", () => {
+    currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    renderCalendar();
+  });
+
+  document.getElementById("nextMonth").addEventListener("click", () => {
+    currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    renderCalendar();
+  });
+
+  renderCalendar();
+</script>
+
+</body>
+</html>
