@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mieux Assuré - Documents sinistre auto</title>
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#667085;
+      --border:#dfe3e8;
+      --soft:#f7f8fa;
+      --primary:#f15b4a;
+      --primary-dark:#df4d3e;
+      --green:#15966a;
+      --green-soft:#eaf8f2;
+      --warning:#a85a00;
+      --warning-soft:#fff7ea;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    .topbar{
+      background:#fff;
+      border-bottom:1px solid var(--border);
+    }
+
+    .topbar-inner{
+      max-width:1180px;
+      margin:0 auto;
+      min-height:76px;
+      padding:14px 28px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .logo{
+      display:block;
+      max-height:44px;
+      max-width:210px;
+      object-fit:contain;
+    }
+
+    .secure{
+      font-size:13px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+
+    .page{
+      max-width:1180px;
+      margin:0 auto;
+      padding:34px 28px 56px;
+    }
+
+    .breadcrumb{
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:22px;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:38px;
+      line-height:1.14;
+      letter-spacing:-0.7px;
+    }
+
+    .intro{
+      margin:0 0 32px;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.5;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:minmax(0, 1fr) 360px;
+      gap:28px;
+      align-items:start;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow:0 8px 24px rgba(31,41,55,.04);
+    }
+
+    .main-card{
+      padding:30px;
+    }
+
+    .summary{
+      display:grid;
+      grid-template-columns:1.1fr .9fr .9fr;
+      gap:26px;
+      padding:22px 26px;
+      background:var(--soft);
+      border-radius:14px;
+      margin-bottom:30px;
+    }
+
+    .summary-label{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:7px;
+    }
+
+    .summary-value{
+      display:block;
+      font-weight:700;
+      font-size:16px;
+    }
+
+    .section-title{
+      margin:0 0 6px;
+      font-size:22px;
+      line-height:1.3;
+    }
+
+    .section-help{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .dropzone{
+      width:100%;
+      min-height:230px;
+      border:2px dashed #cbd2da;
+      border-radius:16px;
+      background:#fbfcfd;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:30px;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .dropzone:hover,
+    .dropzone.dragging{
+      border-color:var(--primary);
+      background:#fff8f6;
+    }
+
+    .upload-icon{
+      width:62px;
+      height:62px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#fff0ed;
+      color:var(--primary);
+      font-size:35px;
+      font-weight:700;
+      margin-bottom:16px;
+    }
+
+    .drop-title{
+      font-size:18px;
+      font-weight:700;
+      margin-bottom:7px;
+    }
+
+    .drop-subtitle{
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .choose-btn{
+      display:inline-block;
+      padding:11px 17px;
+      border:1px solid #cfd5dc;
+      border-radius:10px;
+      background:#fff;
+      font-size:14px;
+      font-weight:700;
+    }
+
+    input[type="file"]{
+      display:none;
+    }
+
+    .file-list{
+      margin-top:16px;
+      display:grid;
+      gap:10px;
+    }
+
+    .file-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:13px 14px;
+      border:1px solid var(--border);
+      border-radius:11px;
+      background:#fff;
+    }
+
+    .file-info{
+      min-width:0;
+    }
+
+    .file-name{
+      font-size:13px;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .file-size{
+      color:var(--muted);
+      font-size:11px;
+      margin-top:3px;
+    }
+
+    .remove{
+      border:0;
+      background:transparent;
+      color:#8d98a5;
+      font-size:20px;
+      cursor:pointer;
+    }
+
+    .notice{
+      margin-top:18px;
+      padding:16px 18px;
+      border-radius:12px;
+      background:var(--warning-soft);
+      color:var(--warning);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .success{
+      display:none;
+      margin-top:18px;
+      padding:14px 16px;
+      border-radius:12px;
+      background:var(--green-soft);
+      color:#126a4a;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .actions{
+      display:flex;
+      justify-content:flex-end;
+      margin-top:26px;
+    }
+
+    .submit{
+      border:0;
+      border-radius:11px;
+      background:var(--primary);
+      color:#fff;
+      padding:14px 22px;
+      min-width:220px;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 8px 18px rgba(241,91,74,.22);
+    }
+
+    .submit:hover{
+      background:var(--primary-dark);
+    }
+
+    .side-card{
+      padding:26px 26px 24px;
+    }
+
+    .side-card h2{
+      margin:0 0 18px;
+      font-size:21px;
+    }
+
+    .doc-row{
+      display:flex;
+      gap:14px;
+      padding:15px 0;
+      border-bottom:1px solid #edf0f2;
+    }
+
+    .doc-row:first-of-type{
+      padding-top:0;
+    }
+
+    .doc-row:last-child{
+      border-bottom:0;
+      padding-bottom:0;
+    }
+
+    .check{
+      flex:0 0 auto;
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      background:var(--green-soft);
+      color:var(--green);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      font-size:16px;
+    }
+
+    .doc-title{
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:5px;
+    }
+
+    .doc-text{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
+    .help-card{
+      margin-top:20px;
+      padding:22px;
+    }
+
+    .help-card strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:8px;
+    }
+
+    .help-card span{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    @media (max-width:900px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      .summary{
+        grid-template-columns:1fr;
+        gap:16px;
+      }
+
+      h1{
+        font-size:31px;
+      }
+    }
+
+    @media (max-width:600px){
+      .page,
+      .topbar-inner{
+        padding-left:18px;
+        padding-right:18px;
+      }
+
+      .main-card,
+      .side-card{
+        padding:20px;
+      }
+
+      h1{
+        font-size:27px;
+      }
+
+      .intro{
+        font-size:15px;
+      }
+
+      .dropzone{
+        min-height:210px;
+        padding:24px 16px;
+      }
+
+      .actions{
+        justify-content:stretch;
+      }
+
+      .submit{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <img src="Logo_MIEUXASSURE.png" alt="Mieux Assuré" class="logo">
+      <div class="secure">🔒 Espace sécurisé</div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="breadcrumb">Accueil &nbsp;›&nbsp; Sinistre auto &nbsp;›&nbsp; Documents</div>
+
+    <h1>Transmettre les documents de votre sinistre</h1>
+    <p class="intro">
+      Ajoutez les pièces utiles à l'étude de votre dossier. Vous pouvez transmettre plusieurs documents en une seule fois.
+    </p>
+
+    <div class="grid">
+
+      <section class="card main-card">
+
+        <div class="summary">
+          <div>
+            <span class="summary-label">N° de sinistre</span>
+            <span class="summary-value">123456</span>
+          </div>
+          <div>
+            <span class="summary-label">Véhicule</span>
+            <span class="summary-value">Renault Austral</span>
+          </div>
+          <div>
+            <span class="summary-label">Date du sinistre</span>
+            <span class="summary-value">3 novembre 2026</span>
+          </div>
+        </div>
+
+        <h2 class="section-title">Ajouter vos documents</h2>
+        <p class="section-help">
+          Formats acceptés : PDF, JPG, JPEG et PNG — 10 Mo maximum par fichier.
+        </p>
+
+        <label for="fileInput" class="dropzone" id="dropzone">
+          <div class="upload-icon">↑</div>
+          <div class="drop-title">Glissez-déposez vos fichiers ici</div>
+          <div class="drop-subtitle">ou sélectionnez-les depuis votre appareil</div>
+          <span class="choose-btn">Choisir des fichiers</span>
+        </label>
+
+        <input id="fileInput" type="file" multiple accept=".pdf,.jpg,.jpeg,.png">
+
+        <div id="fileList" class="file-list"></div>
+
+        <div class="notice">
+          Pensez à vérifier que les documents sont lisibles et complets. Les photographies doivent permettre d'identifier clairement les dommages du véhicule.
+        </div>
+
+        <div id="success" class="success">
+          ✓ Vos documents ont bien été transmis et seront rattachés au sinistre n°123456.
+        </div>
+
+        <div class="actions">
+          <button id="submitBtn" class="submit" type="button">Transmettre les documents</button>
+        </div>
+      </section>
+
+      <aside>
+        <section class="card side-card">
+          <h2>Documents utiles</h2>
+
+          <div class="doc-row">
+            <div class="check">✓</div>
+            <div>
+              <div class="doc-title">Constat amiable</div>
+              <div class="doc-text">Recto et verso si le document a été complété sur papier.</div>
+            </div>
+          </div>
+
+          <div class="doc-row">
+            <div class="check">✓</div>
+            <div>
+              <div class="doc-title">Photos du véhicule</div>
+              <div class="doc-text">Vue d'ensemble et détails des zones endommagées.</div>
+            </div>
+          </div>
+
+          <div class="doc-row">
+            <div class="check">✓</div>
+            <div>
+              <div class="doc-title">Carte grise</div>
+              <div class="doc-text">Une copie lisible du certificat d'immatriculation.</div>
+            </div>
+          </div>
+
+          <div class="doc-row">
+            <div class="check">✓</div>
+            <div>
+              <div class="doc-title">Devis ou facture</div>
+              <div class="doc-text">Si un garage vous a déjà remis un document.</div>
+            </div>
+          </div>
+
+          <div class="doc-row">
+            <div class="check">✓</div>
+            <div>
+              <div class="doc-title">Autre justificatif</div>
+              <div class="doc-text">Dépôt de plainte, témoignage ou document complémentaire.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card help-card">
+          <strong>Besoin d'aide ?</strong>
+          <span>En cas de difficulté pour transmettre une pièce, vous pourrez la communiquer ultérieurement à votre gestionnaire.</span>
+        </section>
+      </aside>
+
+    </div>
+  </main>
+
+  <script>
+    const input = document.getElementById('fileInput');
+    const dropzone = document.getElementById('dropzone');
+    const fileList = document.getElementById('fileList');
+    const submitBtn = document.getElementById('submitBtn');
+    const success = document.getElementById('success');
+
+    let files = [];
+
+    function readableSize(bytes) {
+      if (bytes < 1024 * 1024) return Math.max(1, Math.round(bytes / 1024)) + ' Ko';
+      return (bytes / (1024 * 1024)).toFixed(1).replace('.', ',') + ' Mo';
+    }
+
+    function renderFiles() {
+      fileList.innerHTML = '';
+
+      files.forEach((file, index) => {
+        const row = document.createElement('div');
+        row.className = 'file-item';
+
+        const info = document.createElement('div');
+        info.className = 'file-info';
+        info.innerHTML = `
+          <div class="file-name">${file.name}</div>
+          <div class="file-size">${readableSize(file.size)}</div>
+        `;
+
+        const remove = document.createElement('button');
+        remove.className = 'remove';
+        remove.type = 'button';
+        remove.innerHTML = '×';
+        remove.addEventListener('click', () => {
+          files.splice(index, 1);
+          renderFiles();
+        });
+
+        row.appendChild(info);
+        row.appendChild(remove);
+        fileList.appendChild(row);
+      });
+    }
+
+    function addFiles(newFiles) {
+      for (const file of newFiles) {
+        const allowed = ['application/pdf', 'image/jpeg', 'image/png'];
+        if (allowed.includes(file.type) && file.size <= 10 * 1024 * 1024) {
+          files.push(file);
+        }
+      }
+
+      success.style.display = 'none';
+      renderFiles();
+    }
+
+    input.addEventListener('change', () => addFiles(input.files));
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, e => {
+        e.preventDefault();
+        dropzone.classList.add('dragging');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, e => {
+        e.preventDefault();
+        dropzone.classList.remove('dragging');
+      });
+    });
+
+    dropzone.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+
+    submitBtn.addEventListener('click', () => {
+      if (!files.length) {
+        alert('Ajoutez au moins un document avant de continuer.');
+        return;
+      }
+
+      success.style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
